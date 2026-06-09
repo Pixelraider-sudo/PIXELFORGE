@@ -8,7 +8,7 @@
     <!-- Security -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none';"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none';"
     />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
 
@@ -18,14 +18,17 @@
       name="description"
       content="Pixel Raider is a scalable technology ecosystem for developers, creators, and innovators. AI tools, dev resources, community, and more."
     />
-    <meta name="keywords" content="Pixel Raider, AI, Development, Technology, Ecosystem" />
+    <meta
+      name="keywords"
+      content="Pixel Raider, AI, Development, Technology, Ecosystem"
+    />
     <meta name="author" content="Pixel Raider" />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="/" />
+    <link rel="canonical" href="https://pixelraider.dev" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="/" />
+    <meta property="og:url" content="https://pixelraider.dev" />
     <meta property="og:title" content="Pixel Raider — Build Beyond Limits" />
     <meta
       property="og:description"
@@ -48,7 +51,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-    <!-- Fonts -->
+    <!-- Preconnect fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -56,13 +59,11 @@
       rel="stylesheet"
     />
 
-    <!-- Favicon -->
+    <!-- Favicon placeholder -->
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg" />
   </head>
-
   <body>
     <div id="root"></div>
-
     <noscript>
       <div
         style="
@@ -79,12 +80,13 @@
       >
         <div>
           <h1>JavaScript Required</h1>
-          <p>Pixel Raider requires JavaScript to run.</p>
+          <p>
+            Pixel Raider requires JavaScript to run. Please enable it in your browser
+            settings.
+          </p>
         </div>
       </div>
     </noscript>
-
-    <!-- VITE ENTRY POINT (CRITICAL) -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
