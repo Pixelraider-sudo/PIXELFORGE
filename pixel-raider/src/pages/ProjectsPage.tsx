@@ -1,37 +1,72 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { PageHero }      from '@/components/ui/PageHero'
-import { SectionHeader } from '@/components/ui/SectionHeader'
-import { Card }          from '@/components/ui/Card'
-import { Badge }         from '@/components/ui/Badge'
-import { setPageMeta }   from '@/utils/seo'
+import { PageHero } from '@/components/ui/PageHero'
+import { Card } from '@/components/ui/Card'
+import { Badge } from '@/components/ui/Badge'
+import { setPageMeta } from '@/utils/seo'
 import { FEATURED_PROJECTS } from '@/constants'
 
 const ALL_PROJECTS = [
   ...FEATURED_PROJECTS,
-  { id: 'pr-docs',   title: 'PR Documentation',  description: 'Comprehensive developer docs covering architecture, APIs, and guides for every division.', tags: ['MDX', 'TypeScript'], status: 'wip' as const,         featured: false },
-  { id: 'pr-cli',    title: 'Pixel Raider CLI',   description: 'Command-line tool for scaffolding, building, and deploying Pixel Raider projects.', tags: ['Node.js', 'Commander'], status: 'coming-soon' as const, featured: false },
-  { id: 'pr-mobile', title: 'PR Mobile App',      description: 'Native Android and iOS companion app for the Pixel Raider ecosystem.', tags: ['Kotlin', 'Swift'], status: 'coming-soon' as const,                featured: false },
+  {
+    id: 'pr-docs',
+    title: 'PR Documentation',
+    description:
+      'Comprehensive developer docs covering architecture, APIs, and guides for every division.',
+    tags: ['MDX', 'TypeScript'],
+    status: 'wip' as const,
+    featured: false,
+  },
+  {
+    id: 'pr-cli',
+    title: 'Pixel Raider CLI',
+    description:
+      'Command-line tool for scaffolding, building, and deploying Pixel Raider projects.',
+    tags: ['Node.js', 'Commander'],
+    status: 'coming-soon' as const,
+    featured: false,
+  },
+  {
+    id: 'pr-mobile',
+    title: 'PR Mobile App',
+    description: 'Native Android and iOS companion app for the Pixel Raider ecosystem.',
+    tags: ['Kotlin', 'Swift'],
+    status: 'coming-soon' as const,
+    featured: false,
+  },
 ]
 
 const STATUS_LABELS: Record<string, string> = {
-  live: 'Live', beta: 'Beta', wip: 'In Progress', 'coming-soon': 'Coming Soon',
+  live: 'Live',
+  beta: 'Beta',
+  wip: 'In Progress',
+  'coming-soon': 'Coming Soon',
 }
-const STATUS_VARIANT: Record<string, 'active' | 'building' | 'planned' | 'cyan' | 'violet'> = {
-  live: 'active', beta: 'cyan', wip: 'building', 'coming-soon': 'planned',
+const STATUS_VARIANT: Record<
+  string,
+  'active' | 'building' | 'planned' | 'cyan' | 'violet'
+> = {
+  live: 'active',
+  beta: 'cyan',
+  wip: 'building',
+  'coming-soon': 'planned',
 }
 
 const FILTERS = ['All', 'Live', 'Beta', 'In Progress', 'Coming Soon']
 
 export function ProjectsPage() {
   useEffect(() => {
-    setPageMeta({ title: 'Projects', description: 'All Pixel Raider projects — live, in progress, and planned.' })
+    setPageMeta({
+      title: 'Projects',
+      description: 'All Pixel Raider projects — live, in progress, and planned.',
+    })
   }, [])
 
   const [active, setActive] = useState('All')
-  const filtered = active === 'All'
-    ? ALL_PROJECTS
-    : ALL_PROJECTS.filter(p => STATUS_LABELS[p.status] === active)
+  const filtered =
+    active === 'All'
+      ? ALL_PROJECTS
+      : ALL_PROJECTS.filter((p) => STATUS_LABELS[p.status] === active)
 
   return (
     <>
@@ -47,7 +82,7 @@ export function ProjectsPage() {
         <div className="container">
           {/* Filter tabs */}
           <div className="flex items-center gap-2 flex-wrap mb-10">
-            {FILTERS.map(f => (
+            {FILTERS.map((f) => (
               <button
                 key={f}
                 onClick={() => setActive(f)}
@@ -81,11 +116,18 @@ export function ProjectsPage() {
                       {STATUS_LABELS[project.status]}
                     </Badge>
                   </div>
-                  <h3 className="font-semibold text-base text-pr-text mb-2">{project.title}</h3>
-                  <p className="text-sm text-pr-text2 leading-relaxed flex-1 mb-4">{project.description}</p>
+                  <h3 className="font-semibold text-base text-pr-text mb-2">
+                    {project.title}
+                  </h3>
+                  <p className="text-sm text-pr-text2 leading-relaxed flex-1 mb-4">
+                    {project.description}
+                  </p>
                   <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/[0.05]">
-                    {project.tags.map(tag => (
-                      <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-cyan/8 text-cyan border border-cyan/15 font-mono">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-xs px-2.5 py-1 rounded-full bg-cyan/8 text-cyan border border-cyan/15 font-mono"
+                      >
                         {tag}
                       </span>
                     ))}
@@ -96,7 +138,9 @@ export function ProjectsPage() {
           </div>
 
           {filtered.length === 0 && (
-            <div className="text-center py-20 text-pr-text3">No projects in this category yet.</div>
+            <div className="text-center py-20 text-pr-text3">
+              No projects in this category yet.
+            </div>
           )}
         </div>
       </section>

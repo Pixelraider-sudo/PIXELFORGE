@@ -1,19 +1,42 @@
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { PageHero }        from '@/components/ui/PageHero'
-import { ContactSection }  from '@/components/sections/ContactSection'
-import { setPageMeta }     from '@/utils/seo'
+import { PageHero } from '@/components/ui/PageHero'
+import { ContactSection } from '@/components/sections/ContactSection'
+import { setPageMeta } from '@/utils/seo'
 
 const CHANNELS = [
-  { icon: '📧', label: 'Email', value: 'hello@pixelraider.dev', href: 'mailto:hello@pixelraider.dev' },
-  { icon: '🐙', label: 'GitHub', value: 'github.com/pixelraider', href: 'https://github.com' },
-  { icon: '🐦', label: 'Twitter / X', value: '@pixelraider', href: 'https://twitter.com' },
-  { icon: '🔐', label: 'Security', value: 'security@pixelraider.dev', href: 'mailto:security@pixelraider.dev' },
+  {
+    icon: '📧',
+    label: 'Email',
+    value: 'hello@pixelraider.dev',
+    href: 'mailto:hello@pixelraider.dev',
+  },
+  {
+    icon: '🐙',
+    label: 'GitHub',
+    value: 'github.com/pixelraider',
+    href: 'https://github.com',
+  },
+  {
+    icon: '🐦',
+    label: 'Twitter / X',
+    value: '@pixelraider',
+    href: 'https://twitter.com',
+  },
+  {
+    icon: '🔐',
+    label: 'Security',
+    value: 'security@pixelraider.dev',
+    href: 'mailto:security@pixelraider.dev',
+  },
 ]
 
 export function ContactPage() {
   useEffect(() => {
-    setPageMeta({ title: 'Contact', description: 'Get in touch with the Pixel Raider team.' })
+    setPageMeta({
+      title: 'Contact',
+      description: 'Get in touch with the Pixel Raider team.',
+    })
   }, [])
 
   return (
@@ -31,7 +54,9 @@ export function ContactPage() {
           <div className="grid md:grid-cols-2 gap-12 items-start">
             {/* Channels */}
             <div>
-              <h2 className="font-display font-bold text-2xl mb-8">Other ways to reach us</h2>
+              <h2 className="font-display font-bold text-2xl mb-8">
+                Other ways to reach us
+              </h2>
               <div className="space-y-4">
                 {CHANNELS.map((ch, i) => (
                   <motion.a
@@ -46,10 +71,25 @@ export function ContactPage() {
                   >
                     <span className="text-2xl">{ch.icon}</span>
                     <div>
-                      <div className="text-xs text-pr-text3 font-mono uppercase tracking-widest mb-0.5">{ch.label}</div>
-                      <div className="text-sm font-medium text-pr-text group-hover:text-cyan transition-colors">{ch.value}</div>
+                      <div className="text-xs text-pr-text3 font-mono uppercase tracking-widest mb-0.5">
+                        {ch.label}
+                      </div>
+                      <div className="text-sm font-medium text-pr-text group-hover:text-cyan transition-colors">
+                        {ch.value}
+                      </div>
                     </div>
-                    <svg className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    <svg
+                      className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
+                    </svg>
                   </motion.a>
                 ))}
               </div>
@@ -57,7 +97,7 @@ export function ContactPage() {
             {/* Form */}
             <div>
               <h2 className="font-display font-bold text-2xl mb-8">Send a message</h2>
-              <ContactSection compact />
+              <ContactSection />
             </div>
           </div>
         </div>

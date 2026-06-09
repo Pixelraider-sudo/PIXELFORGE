@@ -1,78 +1,113 @@
 /**
  * Pixel Raider — Secure HTTP Client
- * ─────────────────────────────────────────────────────────────────────────────
- * Wraps axios with: auth headers, request signing, timeout, response
- * validation, error normalization, and retry logic.
- *
- * Usage:
- *   import { api } from '@lib/api-client'
- *   const data = await api.get<User>('/users/me')
  */
 
-import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from 'axios'
-import { API_CONFIG } from '@config/app.config'
-import { safeStorage } from '@utils/security'
-import type { ApiResponse, ApiError } from '@/types'
+import axios, {
+  type AxiosInstance,
+  type AxiosRequestConfig,
+  type AxiosResponse,
+} from 'axios'
 
-// ─── Token Management ─────────────────────────────────────────────────────────
-// Tokens stored in memory (not localStorage) — only refreshToken in httpOnly cookie.
+import { safeStorage } from '@utils/security'
+
+/* ─────────────────────────────────────────────────────────────
+   FIX: Local API config (no AppConfig dependency)
+───────────────────────────────────────────────────────────── */
+const API_CONFIG = {
+  baseUrl: import.meta.env.VITE_API_URL ?? 'http://localhost:3000',
+  timeout: 15000,
+}
+
+/* ─────────────────────────────────────────────────────────────
+   FIX: App version (Vite replacement for __APP_VERSION__)
+───────────────────────────────────────────────────────────── */
+const APP_VERSION = import.meta.env.VITE_APP_VERSION ?? import.meta.env.MODE ?? '1.0.0'
+
+/* ─────────────────────────────────────────────────────────────
+   FIX: Local safe types (prevents missing '@/types' errors)
+───────────────────────────────────────────────────────────── */
+export type ApiError = {
+  code: string
+  message?: string
+}
+
+export type ApiResponse<T> = {
+  data: T
+  message?: string
+  errors?: ApiError[]
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Token storage
+───────────────────────────────────────────────────────────── */
 let _accessToken: string | null = null
 
 export const tokenStore = {
-  get: ()             => _accessToken,
-  set: (t: string)    => { _accessToken = t },
-  clear: ()           => { _accessToken = null; safeStorage.remove('pr_user') },
+  get: () => _accessToken,
+  set: (t: string) => (_accessToken = t),
+  clear: () => {
+    _accessToken = null
+    safeStorage.remove('pr_user')
+  },
 }
 
-// ─── Axios Instance ───────────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────────────────────
+   Axios client
+───────────────────────────────────────────────────────────── */
 const client: AxiosInstance = axios.create({
-  baseURL:         API_CONFIG.baseUrl,
-  timeout:         API_CONFIG.timeout,
-  withCredentials: true,   // sends httpOnly refresh-token cookie
+  baseURL: API_CONFIG.baseUrl,
+  timeout: API_CONFIG.timeout,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
-    'X-Client-Version': __APP_VERSION__,
-    'X-Requested-With': 'XMLHttpRequest',  // Helps prevent CSRF
+    'X-Client-Version': APP_VERSION,
+    'X-Requested-With': 'XMLHttpRequest',
   },
 })
 
-// ─── Request Interceptor ──────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────────────────────
+   Request interceptor
+───────────────────────────────────────────────────────────── */
 client.interceptors.request.use(
   (config) => {
     const token = tokenStore.get()
-    if (token !== null && config.headers) {
-      config.headers['Authorization'] = `Bearer ${token}`
+
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`
     }
-    // Prevent caching of auth/sensitive endpoints
+
     if (config.url?.includes('/auth') || config.url?.includes('/user')) {
+      config.headers = config.headers ?? {}
       config.headers['Cache-Control'] = 'no-store'
       config.headers['Pragma'] = 'no-cache'
     }
+
     return config
   },
-  (error: unknown) => Promise.reject(normalizeError(error)),
+  (error) => Promise.reject(normalizeError(error))
 )
 
-// ─── Response Interceptor ─────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────────────────────
+   Response interceptor (refresh logic)
+───────────────────────────────────────────────────────────── */
 let _isRefreshing = false
 let _refreshQueue: Array<(token: string) => void> = []
 
 client.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: unknown) => {
-    if (!axios.isAxiosError(error)) return Promise.reject(normalizeError(error))
+    if (!axios.isAxiosError(error)) {
+      return Promise.reject(normalizeError(error))
+    }
 
-    const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean }
+    const originalRequest: any = error.config
 
-    // 401 — attempt silent token refresh
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (_isRefreshing) {
-        // Queue concurrent requests while refreshing
         return new Promise((resolve) => {
           _refreshQueue.push((newToken: string) => {
-            if (originalRequest.headers) {
-              originalRequest.headers['Authorization'] = `Bearer ${newToken}`
-            }
+            originalRequest.headers = originalRequest.headers ?? {}
+            originalRequest.headers.Authorization = `Bearer ${newToken}`
             resolve(client(originalRequest))
           })
         })
@@ -82,22 +117,27 @@ client.interceptors.response.use(
       _isRefreshing = true
 
       try {
-        const { data } = await client.post<ApiResponse<{ accessToken: string }>>('/auth/refresh')
+        const { data } =
+          await client.post<ApiResponse<{ accessToken: string }>>('/auth/refresh')
+
         const newToken = data.data.accessToken
         tokenStore.set(newToken)
-        _refreshQueue.forEach((cb) => { cb(newToken) })
+
+        _refreshQueue.forEach((cb) => cb(newToken))
         _refreshQueue = []
-        if (originalRequest.headers) {
-          originalRequest.headers['Authorization'] = `Bearer ${newToken}`
-        }
+
+        originalRequest.headers = originalRequest.headers ?? {}
+        originalRequest.headers.Authorization = `Bearer ${newToken}`
+
         return client(originalRequest)
       } catch (refreshError) {
         tokenStore.clear()
         _refreshQueue = []
-        // Redirect to login on refresh failure
+
         if (typeof window !== 'undefined') {
           window.location.href = '/login?reason=session_expired'
         }
+
         return Promise.reject(normalizeError(refreshError))
       } finally {
         _isRefreshing = false
@@ -105,40 +145,49 @@ client.interceptors.response.use(
     }
 
     return Promise.reject(normalizeError(error))
-  },
+  }
 )
 
-// ─── Error Normalization ──────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────────────────────
+   Error class (FIXED constructor order)
+───────────────────────────────────────────────────────────── */
 export class PixelRaiderApiError extends Error {
-  public readonly code:    string
-  public readonly status:  number
-  public readonly errors?: ApiError[]
-
-  constructor(message: string, code: string, status: number, errors?: ApiError[]) {
+  constructor(
+    public readonly message: string,
+    public readonly code: string,
+    public readonly status: number,
+    public readonly errors?: ApiError[]
+  ) {
     super(message)
-    this.name   = 'PixelRaiderApiError'
-    this.code   = code
-    this.status = status
-    this.errors = errors
+    this.name = 'PixelRaiderApiError'
   }
 }
 
+/* ─────────────────────────────────────────────────────────────
+   Error normalizer (FIXED payload typing + safe errors)
+───────────────────────────────────────────────────────────── */
 function normalizeError(error: unknown): PixelRaiderApiError {
   if (axios.isAxiosError(error)) {
-    const status  = error.response?.status ?? 0
-    const payload = error.response?.data as Partial<ApiResponse> | undefined
-    return new PixelRaiderApiError(
-      payload?.message ?? error.message,
-      payload?.errors?.[0]?.code ?? 'UNKNOWN_ERROR',
-      status,
-      payload?.errors,
-    )
+    const status = error.response?.status ?? 0
+    const payload = error.response?.data as ApiResponse<unknown> | undefined
+
+    const message = payload?.message ?? error.message ?? 'Request failed'
+
+    const code = payload?.errors?.[0]?.code ?? 'UNKNOWN_ERROR'
+
+    const errors = payload?.errors ?? []
+
+    return new PixelRaiderApiError(message, code, status, errors)
   }
+
   const msg = error instanceof Error ? error.message : 'An unexpected error occurred'
-  return new PixelRaiderApiError(msg, 'CLIENT_ERROR', 0)
+
+  return new PixelRaiderApiError(msg, 'CLIENT_ERROR', 0, [])
 }
 
-// ─── Typed API Methods ────────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────────────────────
+   API wrapper
+───────────────────────────────────────────────────────────── */
 export const api = {
   get: <T>(url: string, config?: AxiosRequestConfig) =>
     client.get<ApiResponse<T>>(url, config).then((r) => r.data.data),
