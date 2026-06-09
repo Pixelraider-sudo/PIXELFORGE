@@ -1,16 +1,12 @@
 # Dependencies
 node_modules/
-.pnp
-.pnp.js
 
-# Build outputs
+# Build output — NEVER commit
 dist/
 build/
 out/
-.next/
-.nuxt/
 
-# Environment files — NEVER COMMIT
+# Environment — NEVER commit secrets
 .env
 .env.local
 .env.development.local
@@ -18,34 +14,30 @@ out/
 .env.production.local
 .env.staging
 
-# Logs
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
 # OS
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
+._*
 
 # Editor
 .vscode/settings.json
 .idea/
 *.swp
 *.swo
-*~
 
-# Testing
-coverage/
-.nyc_output/
+# Logs
+*.log
+npm-debug.log*
 
-# Misc
+# Cache & build info
 .cache/
-.parcel-cache/
 *.tsbuildinfo
+coverage/
+
+# Project junk — never commit
+structure.txt
+postcss.config.cjs
+app_backup/
+pixel-raider/node_modules/
+pixel-raider/dist/
+
