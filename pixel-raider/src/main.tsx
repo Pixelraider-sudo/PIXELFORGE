@@ -10,7 +10,6 @@ if (!rootEl) {
   )
 }
 
-// Guard against prototype pollution
 Object.freeze(Object.prototype)
 
 createRoot(rootEl).render(
