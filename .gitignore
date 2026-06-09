@@ -41,3 +41,5 @@ app_backup/
 pixel-raider/node_modules/
 pixel-raider/dist/
 
+
+.vercel
