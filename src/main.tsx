@@ -10,8 +10,6 @@ if (!rootEl) {
   )
 }
 
-Object.freeze(Object.prototype)
-
 createRoot(rootEl).render(
   <StrictMode>
     <App />
