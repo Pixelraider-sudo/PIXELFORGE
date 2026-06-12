@@ -7,20 +7,20 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
 
-    "baseUrl": ".",
+    "baseUrl": "./src",
 
     "paths": {
-      "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@pages/*": ["src/pages/*"],
-      "@hooks/*": ["src/hooks/*"],
-      "@utils/*": ["src/utils/*"],
-      "@styles/*": ["src/styles/*"],
-      "@constants/*": ["src/constants/*"],
-      "@types/*": ["src/types/*"],
-      "@lib/*": ["src/lib/*"],
-      "@context/*": ["src/context/*"],
-      "@config/*": ["src/config/*"]
+      "@/*": ["*"],
+      "@components/*": ["components/*"],
+      "@pages/*": ["pages/*"],
+      "@hooks/*": ["hooks/*"],
+      "@utils/*": ["utils/*"],
+      "@styles/*": ["styles/*"],
+      "@constants/*": ["constants/*"],
+      "@types/*": ["types/*"],
+      "@lib/*": ["lib/*"],
+      "@context/*": ["context/*"],
+      "@config/*": ["config/*"]
     },
 
     "allowImportingTsExtensions": true,

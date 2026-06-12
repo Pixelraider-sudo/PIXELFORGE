@@ -1,45 +1,83 @@
-import { ROADMAP_PHASES } from '@/constants'
+import { motion } from 'framer-motion'
 import { Badge } from '@/components/ui/Badge'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
+import { ROADMAP_PHASES } from '@/constants'
+
+const PHASE_IMAGES: Record<number, string> = {
+  1: 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=400&q=70&auto=format&fit=crop',
+  2: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=70&auto=format&fit=crop',
+  3: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&q=70&auto=format&fit=crop',
+}
 
 export function RoadmapSection() {
   const { ref, isVisible } = useScrollReveal()
 
   return (
-    <section id="roadmap" className="section relative overflow-hidden" aria-label="Development roadmap">
+    <section
+      id="roadmap"
+      className="section relative overflow-hidden"
+      aria-label="Development roadmap"
+    >
+      <div
+        className="absolute inset-0 bg-grid opacity-20 pointer-events-none"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute top-1/2 right-0 w-[400px] h-[400px] rounded-full blur-[120px] opacity-[0.04] bg-violet pointer-events-none translate-x-1/2"
+        aria-hidden="true"
+      />
+
       <div className="container relative z-10">
-        <div ref={ref} className={`text-center mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="inline-flex items-center gap-2 text-xs tracking-[0.25em] uppercase text-[var(--cyan)] font-mono mb-4">
-            <span className="w-8 h-px bg-[var(--cyan)]" aria-hidden="true" />
+        {/* Header */}
+        <div
+          ref={ref}
+          className={`text-center mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+        >
+          <div className="inline-flex items-center gap-2 text-xs tracking-[0.25em] uppercase text-cyan font-mono mb-4">
+            <span className="w-8 h-px bg-cyan" aria-hidden="true" />
             Development Phases
-            <span className="w-8 h-px bg-[var(--cyan)]" aria-hidden="true" />
+            <span className="w-8 h-px bg-cyan" aria-hidden="true" />
           </div>
-          <h2 className="font-display font-bold text-4xl md:text-5xl mb-4">
+          <h2 className="font-display font-bold text-4xl md:text-5xl mb-4 text-pr-text">
             The{' '}
-            <span style={{background:'var(--grad)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text'}}>Roadmap</span>
+            <span className="bg-gradient-to-r from-cyan to-violet bg-clip-text text-transparent">
+              Roadmap.
+            </span>
           </h2>
-          <p className="text-[var(--text2)] max-w-xl mx-auto">9 phases. Each one building on the last. We ship, we scale, we expand.</p>
+          <p className="text-pr-text2 max-w-xl mx-auto">
+            9 phases. Each one building on the last. We plan, ship, document, and expand.
+          </p>
         </div>
 
         <div className="relative">
-          {/* Timeline line */}
-          <div className="absolute left-[22px] md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-[var(--cyan)] via-[var(--violet)] to-transparent" aria-hidden="true" />
+          {/* Timeline spine */}
+          <div
+            className="absolute left-[22px] md:left-1/2 top-0 bottom-0 w-px"
+            style={{
+              background: 'linear-gradient(to bottom, #00C8E8, #6E54F7 70%, transparent)',
+            }}
+            aria-hidden="true"
+          />
 
           <div className="space-y-8">
             {ROADMAP_PHASES.map((phase, i) => (
-              <div
+              <motion.div
                 key={phase.phase}
-                className={`relative flex flex-col md:flex-row gap-8 items-start md:items-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
-                style={{ transitionDelay: `${i * 80}ms` }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ delay: i * 0.06, duration: 0.5 }}
+                className="relative flex flex-col md:flex-row gap-8 items-start md:items-center"
+                aria-label={`Phase ${phase.phase}: ${phase.title}`}
               >
-                {/* Dot */}
+                {/* Phase dot */}
                 <div
-                  className={`absolute left-0 md:left-1/2 w-11 h-11 md:-translate-x-1/2 rounded-xl flex items-center justify-center font-display font-bold text-sm z-10 border ${
+                  className={`absolute left-0 md:left-1/2 w-11 h-11 md:-translate-x-1/2 rounded-xl flex items-center justify-center font-display font-bold text-sm z-10 border transition-all ${
                     phase.status === 'active'
-                      ? 'bg-[var(--cyan)] border-[var(--cyan)] text-black shadow-[0_0_20px_rgba(0,200,232,0.5)]'
+                      ? 'bg-cyan border-cyan text-black shadow-[0_0_20px_rgba(0,200,232,0.5)]'
                       : phase.status === 'building'
-                      ? 'bg-[var(--violet)]/20 border-[var(--violet)] text-[var(--violet)]'
-                      : 'bg-[var(--surface)] border-white/10 text-[var(--text3)]'
+                        ? 'bg-violet/20 border-violet text-violet'
+                        : 'bg-pr-surface border-white/10 text-pr-text3'
                   }`}
                   aria-hidden="true"
                 >
@@ -51,24 +89,69 @@ export function RoadmapSection() {
                   className={`ml-16 md:ml-0 w-full md:w-[calc(50%-40px)] ${
                     i % 2 === 0 ? 'md:pr-16 md:text-right md:ml-auto' : 'md:ml-16'
                   }`}
-                  aria-label={`Phase ${phase.phase}: ${phase.title}`}
                 >
-                  <div className="bg-white/[0.03] border border-white/[0.07] rounded-xl p-5 hover:border-[var(--cyan)]/25 hover:bg-white/[0.05] transition-all group">
-                    <div className={`flex items-center gap-2 mb-3 ${i % 2 === 0 ? 'md:justify-end' : ''}`}>
-                      <span className="font-mono text-xs text-[var(--text3)]">Phase {phase.phase}</span>
-                      <Badge variant={phase.status === 'active' ? 'active' : phase.status === 'building' ? 'building' : 'planned'}>
-                        {phase.status === 'active' ? '▶ Active' : phase.status === 'building' ? '⚡ Building' : '○ Planned'}
+                  <div
+                    className={`rounded-xl border p-5 transition-all duration-300 group hover:border-cyan/20 ${
+                      phase.status === 'active'
+                        ? 'border-cyan/30 bg-cyan/[0.04] shadow-[0_0_24px_rgba(0,200,232,0.06)]'
+                        : 'border-white/[0.07] bg-white/[0.02] hover:bg-white/[0.04]'
+                    }`}
+                  >
+                    {/* Image for active/early phases */}
+                    {PHASE_IMAGES[phase.phase] && (
+                      <div
+                        className={`w-full h-24 rounded-lg overflow-hidden mb-4 ${i % 2 === 0 ? 'md:order-last' : ''}`}
+                      >
+                        <img
+                          src={PHASE_IMAGES[phase.phase]}
+                          alt={`Phase ${phase.phase} — ${phase.title}`}
+                          className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity"
+                          loading="lazy"
+                        />
+                      </div>
+                    )}
+
+                    <div
+                      className={`flex items-center gap-2 mb-3 ${i % 2 === 0 ? 'md:justify-end' : ''}`}
+                    >
+                      <span className="font-mono text-xs text-pr-text3">
+                        Phase {phase.phase}
+                      </span>
+                      <Badge
+                        variant={
+                          phase.status === 'active'
+                            ? 'active'
+                            : phase.status === 'building'
+                              ? 'building'
+                              : 'planned'
+                        }
+                      >
+                        {phase.status === 'active'
+                          ? 'Active'
+                          : phase.status === 'building'
+                            ? 'Building'
+                            : 'Planned'}
                       </Badge>
                     </div>
-                    <h3 className="font-semibold text-[var(--text)] mb-3">{phase.title}</h3>
-                    <ul className={`flex flex-wrap gap-2 ${i % 2 === 0 ? 'md:justify-end' : ''}`} role="list">
+
+                    <h3 className="font-semibold text-pr-text mb-3">{phase.title}</h3>
+
+                    <ul
+                      className={`flex flex-wrap gap-2 ${i % 2 === 0 ? 'md:justify-end' : ''}`}
+                      role="list"
+                    >
                       {phase.items.map((item) => (
-                        <li key={item} className="text-xs px-2.5 py-1 rounded-full bg-white/5 text-[var(--text3)] font-mono">{item}</li>
+                        <li
+                          key={item}
+                          className="text-xs px-2.5 py-1 rounded-full bg-white/5 text-pr-text3 font-mono border border-white/[0.05]"
+                        >
+                          {item}
+                        </li>
                       ))}
                     </ul>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
