@@ -1,86 +1,84 @@
-/**
- * PIXEL RAIDER — App Constants
- * Single source of truth for static data.
- */
 import type { Division, Project, Stat } from '@/types'
 
 export const DIVISIONS: Division[] = [
   {
     id: 'ai',
-    icon: '🤖',
+    icon: 'ai',
     name: 'Pixel Raider AI',
     description:
-      'Chat, code generation, image AI, voice assistant, and intelligent automation tools.',
+      'Chat, code generation, image synthesis, voice assistant, and intelligent workflow automation — all in one platform.',
     status: 'building',
     href: '/ai',
   },
   {
     id: 'labs',
-    icon: '🔬',
+    icon: 'labs',
     name: 'Pixel Raider Labs',
     description:
-      'Experimental tech: robotics, IoT, custom OS, smart home, and drone software.',
+      'Experimental tech division: robotics firmware, IoT mesh networks, custom OS experiments, and drone autonomy software.',
     status: 'planned',
     href: '/labs',
   },
   {
     id: 'security',
-    icon: '🔐',
+    icon: 'security',
     name: 'Pixel Raider Security',
     description:
-      'Password manager, vulnerability scanner, encryption tools, and URL scanner.',
+      'Zero-knowledge password manager, vulnerability scanner, AES-256 encryption tools, and real-time URL threat detection.',
     status: 'building',
     href: '/security',
   },
   {
     id: 'cloud',
-    icon: '☁️',
+    icon: 'cloud',
     name: 'Pixel Raider Cloud',
     description:
-      'Scalable cloud infrastructure, CI/CD pipelines, monitoring, and managed services.',
+      'Managed cloud infrastructure, auto-scaling CI/CD pipelines, distributed monitoring, and serverless compute at the edge.',
     status: 'planned',
     href: '/cloud',
   },
   {
     id: 'mobile',
-    icon: '📱',
+    icon: 'mobile',
     name: 'Pixel Raider Mobile',
     description:
-      'Native Android (Kotlin) and iOS (Swift) applications for the ecosystem.',
+      'Native Android (Kotlin + Jetpack Compose) and iOS (Swift + SwiftUI) applications across the full Pixel Raider ecosystem.',
     status: 'planned',
     href: '/mobile',
   },
   {
     id: 'community',
-    icon: '👥',
+    icon: 'community',
     name: 'Pixel Raider Community',
-    description: 'Forums, hackathons, leaderboards, developer profiles, and live events.',
+    description:
+      'Developer forums, global hackathons, leaderboards, team profiles, live events, and open coding challenges.',
     status: 'planned',
     href: '/community',
   },
   {
     id: 'garage',
-    icon: '🚗',
+    icon: 'garage',
     name: 'Pixel Raider Garage',
     description:
-      'Smart vehicle companions, digital dashboards, telemetry, and RGB concepts.',
+      'Smart vehicle companions, real-time digital dashboards, performance telemetry logging, and custom RGB lighting control.',
     status: 'planned',
     href: '/garage',
   },
   {
     id: 'marketplace',
-    icon: '🛒',
+    icon: 'marketplace',
     name: 'Pixel Raider Marketplace',
-    description: 'Templates, themes, components, plugins, courses, and AI prompts.',
+    description:
+      'Buy and sell premium UI templates, components, plugins, AI prompt packs, developer courses, and productivity tools.',
     status: 'planned',
     href: '/marketplace',
   },
   {
     id: 'media',
-    icon: '📺',
+    icon: 'media',
     name: 'Pixel Raider Media',
     description:
-      'YouTube, podcast, blog, tutorials, livestreams, and developer documentation.',
+      'YouTube build logs, technical podcast, engineering blog, livestreamed dev sessions, tutorials, and developer documentation.',
     status: 'active',
     href: '/blog',
   },
@@ -90,32 +88,37 @@ export const FEATURED_PROJECTS: Project[] = [
   {
     id: 'pr-homepage',
     title: 'Pixel Raider Homepage',
-    description: 'The flagship brand website — Phase 1 of the full ecosystem.',
-    tags: ['React', 'TypeScript', 'Framer Motion'],
+    description:
+      'The flagship brand website — Phase 1 & 2 of the full ecosystem. React, TypeScript, Tailwind, deployed on Vercel.',
+    tags: ['React', 'TypeScript', 'Framer Motion', 'Tailwind'],
     status: 'live',
     featured: true,
+    href: 'https://pixelforge-u8gc.vercel.app',
   },
   {
     id: 'pr-ai-cmd',
     title: 'AI Command Center',
-    description: 'Streaming AI chat interface powered by the Anthropic API.',
-    tags: ['React', 'Anthropic API', 'WebSockets'],
+    description:
+      'Streaming AI chat interface powered by the Anthropic API with markdown rendering and full conversation history.',
+    tags: ['React', 'Anthropic API', 'Streaming'],
     status: 'beta',
     featured: true,
   },
   {
     id: 'pr-backend',
     title: 'Backend Architecture',
-    description: 'Full auth, REST/GraphQL APIs, RBAC, and multi-database strategy.',
-    tags: ['Node.js', 'PostgreSQL', 'Redis'],
+    description:
+      'Full authentication system, REST + GraphQL APIs, RBAC authorization layer, and multi-database strategy document.',
+    tags: ['Node.js', 'PostgreSQL', 'Redis', 'GraphQL'],
     status: 'wip',
     featured: true,
   },
   {
     id: 'pr-security',
     title: 'Security Toolkit',
-    description: 'Password manager, URL scanner, and encryption utilities.',
-    tags: ['TypeScript', 'Crypto API'],
+    description:
+      'Zero-knowledge password manager, AES-256 encryption, real-time URL scanner, and file threat detection engine.',
+    tags: ['TypeScript', 'Crypto API', 'WebCrypto'],
     status: 'coming-soon',
     featured: true,
   },
@@ -129,15 +132,22 @@ export const STATS: Stat[] = [
 ]
 
 export const TECH_STACK = {
-  frontend: ['React', 'TypeScript', 'Vite', 'Framer Motion', 'Tailwind CSS'],
-  backend: ['Node.js', 'Express.js', 'NestJS', 'GraphQL', 'REST APIs'],
-  databases: ['PostgreSQL', 'MongoDB', 'Redis', 'Supabase'],
-  mobile: ['Kotlin', 'Swift', 'Jetpack Compose', 'SwiftUI'],
-  cloud: ['Docker', 'Kubernetes', 'AWS', 'Google Cloud', 'GitHub Actions'],
-  ai: ['Anthropic API', 'RAG', 'Embeddings', 'AI Agents', 'Fine-tuning'],
+  frontend: ['React 18', 'TypeScript 5', 'Vite 5', 'Framer Motion', 'Tailwind CSS'],
+  backend: ['Node.js', 'Express.js', 'NestJS', 'GraphQL', 'REST APIs', 'WebSockets'],
+  databases: ['PostgreSQL', 'MongoDB', 'Redis', 'Supabase', 'Firebase'],
+  mobile: ['Kotlin', 'Jetpack Compose', 'Swift', 'SwiftUI'],
+  cloud: ['Docker', 'Kubernetes', 'AWS', 'Google Cloud', 'GitHub Actions', 'Vercel'],
+  ai: ['Anthropic API', 'OpenAI', 'RAG', 'Embeddings', 'AI Agents', 'Fine-tuning'],
 } as const
 
-export const ROADMAP_PHASES = [
+export type RoadmapStatus = 'active' | 'building' | 'planned'
+
+export const ROADMAP_PHASES: Array<{
+  phase: number
+  title: string
+  status: RoadmapStatus
+  items: string[]
+}> = [
   {
     phase: 1,
     title: 'Brand & Foundation',
@@ -148,7 +158,7 @@ export const ROADMAP_PHASES = [
     phase: 2,
     title: 'React Components',
     status: 'building',
-    items: ['Component library', 'Routing', 'Animations', 'Dark/light mode'],
+    items: ['Component library', 'Routing', 'Animations', 'Page transitions'],
   },
   {
     phase: 3,
@@ -192,4 +202,4 @@ export const ROADMAP_PHASES = [
     status: 'planned',
     items: ['Enterprise licensing', 'Global expansion', 'Partner network'],
   },
-] as const
+]
