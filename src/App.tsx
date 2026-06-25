@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 
@@ -68,6 +68,17 @@ function AnimatedRoutes() {
 }
 
 export default function App() {
+  useEffect(() => {
+    fetch('http://localhost:4000/health')
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('Backend response:', data)
+      })
+      .catch((err) => {
+        console.error('❌ Connection failed:', err)
+      })
+  }, [])
+
   return (
     <ThemeProvider>
       <BrowserRouter>
